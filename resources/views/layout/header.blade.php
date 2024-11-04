@@ -12,7 +12,7 @@
 
 <body>
     {{-- @include('user/layouts/preloader') --}}
-    <section class=" bg-primary text-white top-0 w-full navbar">
+    <section class=" bg-primary text-white top-0 w-full navbar z-50">
         <div class=" container mx-auto py-6 flex items-center justify-between">
             <div class="flex justify-between items-center space-x-7">
                 <div class="w-3/6 md:w-2/12">
