@@ -9,6 +9,11 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import { tns } from "tiny-slider";
+import "tiny-slider/dist/tiny-slider.css";
+
+
+
 
 // Initialize AOS
 AOS.init({
@@ -169,3 +174,27 @@ function togglePaymentStatusText() {
 
 // Set the initial text on page load, in case of old input
 document.addEventListener("DOMContentLoaded", togglePaymentStatusText);
+
+// Initialize the slider
+const slider = tns({
+    container: "#guestReviewSlider",
+    items: 1,
+    slideBy: "page",
+    autoplay: true,
+    controls: false,
+    nav: true,
+    autoplayButtonOutput: false,
+    responsive: {
+        640: {
+            items: 1,
+        },
+        700: {
+            items: 2,
+        },
+        900: {
+            items: 3,
+        },
+    },
+});
+
+

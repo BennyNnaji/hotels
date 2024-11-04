@@ -1,6 +1,8 @@
 @extends('layout/content')
 @section('content')
 @include('sections/hero')
-@include('sections/heghlighr')
+@include('sections/about')
+@include('sections/highlights')
+@include('sections/testimonials')
 @endsection
 ln -s $HOME/college.easyworldtechs.com/core/storage/app/public $HOME/college.easyworldtechs.com/storage 

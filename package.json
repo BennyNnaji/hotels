@@ -22,6 +22,7 @@
         "jquery": "^3.7.1",
         "summernote": "^0.9.1",
         "tailwindcss-elevation": "^2.0.0",
+        "tiny-slider": "^2.9.4",
         "toastr": "^2.1.4"
     }
 }

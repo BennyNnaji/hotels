@@ -1,15 +1,15 @@
 <div style="background-image: url('{{ Storage::url('front/hero.jpg') }}');" class="bg-cover bg-center min-h-screen">
 <div class=" bg-black/60 min-h-screen">
-    <section class="md:flex justify-between  px-12">
+    <section class="md:flex justify-between  p-12 ">
         <div class=" mt-24">
             <h1 class="text-4xl font-bold text-white">Welcome to Oriental Hotel</h1>
             <p class="text-lg text-gray-400 mt-2">Step into a world of comfort and elegance at the Oriental Hotel, where every moment is crafted to create unforgettable memories. Our luxurious rooms are designed with your relaxation in mind, offering stunning views and exquisite amenities to ensure your stay is nothing short of perfect.</p>
             <p class="text-lg text-gray-400 mt-2">Whether you’re here for a romantic getaway, a family vacation, or a business trip, we are committed to providing you with the best experience at the best price. Indulge in our warm hospitality, savor delectable dining options, and explore the vibrant culture that surrounds us.</p>
             <div class="flex gap-4 mt-4">
                 <a href="{{ route('reservation') }}"
-                   class="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition duration-200">Book Your Stay Now</a>
+                   class="px-4 py-2 text-white bg-accent rounded-md hover:border-white hover:bg-transparent border-2 transition duration-200">Book Your Stay Now</a>
                 <a href="#about-us"
-                   class="px-4 py-2 text-white bg-gray-800 rounded-md hover:bg-gray-700 transition duration-200">Learn More About Us</a>
+                   class="px-4 py-2 text-accent hover:bg-white border-2 border-accent  rounded-md  transition duration-200">Learn More About Us</a>
             </div>
             
 
