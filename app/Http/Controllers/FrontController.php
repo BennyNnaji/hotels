@@ -16,8 +16,8 @@ class FrontController extends Controller
     public function index()
     {
         $title = "Home";
-        $events = Event::latest()->take(3);
-        $blogs = Blog::latest()->take(3);
+        $events = Event::latest()->take(3)->get();
+        $blogs = Blog::latest()->take(3)->get();
         return view('index', compact('title', 'events', 'blogs'));
     }
     public function page(String $page)
