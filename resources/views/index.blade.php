@@ -7,5 +7,6 @@
 @include('sections/cta')
 @include('sections/events')
 @include('sections/blogs')
+@include('sections/newsletter')
 @endsection
 ln -s $HOME/college.easyworldtechs.com/core/storage/app/public $HOME/college.easyworldtechs.com/storage 
