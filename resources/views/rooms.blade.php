@@ -20,11 +20,11 @@
                         <!-- Room Images Slider -->
                         <div class="relative">
                             @if ($room->photos && count($room->photos) > 0)
-                                <div class="relative overflow-hidden rounded-t-lg">
+                                <div class="relative overflow-hidden rounded-t-lg h-72 ">
                                     <div id="room-slider-{{ $room->id }}"
-                                        class="flex transition-transform duration-300">
+                                        class="flex transition-transform duration-300 ease-in-out">
                                         @foreach ($room->photos as $photo)
-                                            <img src="{{ Storage::url($photo) }}" alt="{{ $room->title }}" class="w-full">
+                                            <img src="{{ Storage::url($photo) }}" alt="{{ $room->title }}" class="w-full h-full object-cover">
                                         @endforeach
                                     </div>
                                     <!-- Slider Navigation -->
