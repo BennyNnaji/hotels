@@ -9,6 +9,10 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
+// use App\Models\Reservation;
+use Illuminate\Support\Facades\Redirect;
+
 
 class ReservationController extends Controller
 {
@@ -51,7 +55,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'price' => 'required',
+            'price' => 'required|gt:0',
             'phone' => 'nullable|string|max:20',
             'checkIn' => 'required|date|after_or_equal:today',
             'checkOut' => 'required|date|after_or_equal:checkIn',
@@ -108,27 +112,28 @@ class ReservationController extends Controller
                 'payment' => $reservation->payment,
             ];
 
-            // Send confirmation email to the guest
-            Mail::send('emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
-                $message->from($contact->email, $settings->name);
-                $message->to($reservation->email, $reservation->fullName);
-                $message->subject('Reservation Confirmation - Orient Hotel');
-            });
+            // // Send confirmation email to the guest
+            // Mail::send('emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
+            //     $message->from($contact->email, $settings->name);
+            //     $message->to($reservation->email, $reservation->fullName);
+            //     $message->subject('Reservation Confirmation - Orient Hotel');
+            // });
 
-            // Send confirmation email to the admin
-            Mail::send('admin.emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($settings, $contact) {
-                $message->from($contact->email, $settings->name);
-                $message->to($contact->email, $settings->name);
-                $message->subject('Reservation Notification - Orient Hotel');
-            });
+            // // Send confirmation email to the admin
+            // Mail::send('admin.emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($settings, $contact) {
+            //     $message->from($contact->email, $settings->name);
+            //     $message->to($contact->email, $settings->name);
+            //     $message->subject('Reservation Notification - Orient Hotel');
+            // });
         }
 
-        // Save reservation ID in session and redirect to success page
-        session(['reservation_id' => $reservation->id]);
+
         if (Auth::user()) {
             return redirect()->route('admin.reservations.index')->with('success', 'Your reservation has been successfully created.');
         }
-        return redirect()->route('reservation.success')->with('success', 'Your reservation has been successfully created.');
+        // Save reservation ID in session
+        session(['reservation_id' => $reservation->id]);
+        return redirect()->route('reservation.pay', $reservation->id)->with('success', 'Your reservation has been successfully created.');
     }
     public function update(Request $request, Reservation $reservation)
     {
@@ -212,17 +217,4 @@ class ReservationController extends Controller
     }
 
 
-    public function success()
-    {
-        // Retrieve reservation details if needed
-        $reservationId = session('reservation_id');
-        $title = "Reservation Successfully";
-        $contact = Contact::first();
-
-        // Clear reservation ID from session
-        // session()->forget('reservation_id');
-        $setting = Setting::first();
-
-        return view('reservation-successful', compact('reservationId', 'title', 'contact', 'setting'));
-    }
 }

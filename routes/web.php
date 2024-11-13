@@ -14,6 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [FrontController::class, 'index'])->name('front');
 Route::get('/blogs/{id}', [FrontController::class, 'blogDetails'])->name('blogDetails');
@@ -22,9 +23,30 @@ Route::get('/events/{id}', [FrontController::class, 'eventDetails'])->name('even
 Route::post('/contact', [FrontController::class, 'contact'])->name('contact');
 Route::post('/newsletter', [FrontController::class, 'newsletter'])->name('newsletter');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservation');
-Route::get('/reservation/success', [ReservationController::class, 'success'])
-    ->name('reservation.success')
-    ->middleware('reservation.success');
+Route::post('/clear-session', [PaymentController::class, 'clearSession'])->name('clear.session');
+
+Route::middleware('reservation.success')->name('reservation.')->prefix('reservation')->group(function () {
+    // Route::get('/pay/{id}', [PaymentController::class, 'pay'])->name('pay');
+    // Route::post('/success', [PaymentController::class, 'callback'])->name('callback');
+    Route::get('/success', [PaymentController::class, 'success'])->name('success');
+});
+
+
+Route::middleware('reservation.success')->name('reservation.')->prefix('reservation')->group(
+    function () {
+        Route::get('/pay', [PaymentController::class, 'initialize'])->name('pay');
+        Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('callback');
+        Route::get('/success', [PaymentController::class, 'success'])->name('success');
+
+        // Route::get('/reservation/success', function () {
+        //     return view('payments.success'); // Create a view for success
+        // })->name('reservation.success');
+        // Route::get('/reservation/failure', function () {
+        //     return view('payments.failure'); // Create a view for failure
+        // })->name('reservation.failure');
+    }
+);
+
 
 Route::middleware('auth')->name('admin.')->prefix('admin')->group(function () {
     Route::get('/', function () {

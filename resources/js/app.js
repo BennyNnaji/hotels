@@ -7,8 +7,6 @@ import "summernote/dist/summernote-lite.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-// import toastr from "toastr";
-// import "toastr/build/toastr.min.css";
 import { tns } from "tiny-slider";
 import "tiny-slider/dist/tiny-slider.css";
 
