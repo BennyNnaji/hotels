@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
-// use App\Models\Reservation;
 use Illuminate\Support\Facades\Redirect;
 
 
@@ -112,19 +111,19 @@ class ReservationController extends Controller
                 'payment' => $reservation->payment,
             ];
 
-            // // Send confirmation email to the guest
-            // Mail::send('emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
-            //     $message->from($contact->email, $settings->name);
-            //     $message->to($reservation->email, $reservation->fullName);
-            //     $message->subject('Reservation Confirmation - Orient Hotel');
-            // });
+            // Send confirmation email to the guest
+            Mail::send('emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
+                $message->from($contact->email, $settings->name);
+                $message->to($reservation->email, $reservation->fullName);
+                $message->subject('Reservation Confirmation - Orient Hotel');
+            });
 
-            // // Send confirmation email to the admin
-            // Mail::send('admin.emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($settings, $contact) {
-            //     $message->from($contact->email, $settings->name);
-            //     $message->to($contact->email, $settings->name);
-            //     $message->subject('Reservation Notification - Orient Hotel');
-            // });
+            // Send confirmation email to the admin
+            Mail::send('admin.emails.reservation', array_merge($data, compact('settings', 'contact')), function ($message) use ($settings, $contact) {
+                $message->from($contact->email, $settings->name);
+                $message->to($contact->email, $settings->name);
+                $message->subject('Reservation Notification - Orient Hotel');
+            });
         }
 
 
@@ -215,6 +214,4 @@ class ReservationController extends Controller
         // Redirect to reservations list with a success message
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation updated successfully.');
     }
-
-
 }

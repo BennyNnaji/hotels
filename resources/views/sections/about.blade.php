@@ -12,8 +12,8 @@
          </div>
 
          <!-- Text Content -->
-         <div class="w-full md:w-1/2" data-aos="zoom-in-up">
-             <p class="text-gray-700 text-lg leading-relaxed">{!! $about->about_us !!} </p>
+         <div class="w-full md:w-1/2" data-aos="zoom-in-up"> 
+             <p class="text-gray-700 text-lg leading-relaxed">{{ Str::limit(strip_tags($about->about_us ), 500, '...')}} </p>
 
          </div>
      </div>

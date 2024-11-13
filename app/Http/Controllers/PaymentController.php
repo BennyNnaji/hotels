@@ -8,47 +8,11 @@ use App\Models\Setting;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
-    // public function pay($id)
-    // {
-    //     $setting = Setting::first();
-    //     $contact = Contact::first();
-    //     $title = "Payment";
-    //     $reservationId = session('reservation_id');
-    //     $reservation = Reservation::where('id', $reservationId)->first();
-    //     $paystackPublicKey = env('PAYSTACK_PUBLIC_KEY');
 
-    //     return view('reservation-pay', compact('reservation', 'title', 'contact', 'setting', 'paystackPublicKey'));
-    // }
-
-    // public function callback(Request $request)
-    // {
-    //     $reference = $request->input('reference'); // Get reference from the request
-
-    //     if (!$reference) {
-    //         return redirect()->back()->with('error', 'Payment reference is missing!');
-    //     }
-
-    //     $paymentDetails = Http::withHeaders([
-    //         'Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_KEY')
-    //     ])->get('https://api.paystack.co/transaction/verify/' . $reference)->json();
-
-    //     if ($paymentDetails['data']['status'] === 'success') {
-    //         $reservation = Reservation::where('ref', $reference)->firstOrFail();
-    //         if ($reservation) {
-    //             $reservation->update(['payment' => 1, 'status' => 'active']);
-    //             session(['reservation' => $reservation]);
-    //         } else {
-    //             return redirect()->back()->with('error', 'Reservation not found!');
-    //         }
-
-    //         return redirect()->route('reservation.success')->with('success', 'Payment successful!');
-    //     }
-
-    //     return redirect()->back()->with('error', 'Payment failed!');
-    // }
     public function initialize(Request $request)
     {
         $setting = Setting::first();
@@ -82,8 +46,13 @@ class PaymentController extends Controller
     {
         $reference = $request->query('reference');
 
-        // Verify payment status with Paystack API
+        // // Verify payment status with Paystack API
+        // $paymentDetails = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        //     ->get("https://api.paystack.co/transaction/verify/{$reference}")
+        //     ->json();
+
         $paymentDetails = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+            ->withoutVerifying() // This disables SSL certificate verification
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
 
@@ -94,6 +63,30 @@ class PaymentController extends Controller
 
             // // Optional: Clear session reservation ID
             // Session::forget('reservation_id');
+            // Email data to be sent
+            $data = [
+                    'fullName' => $reservation->fullName,
+                    'phone' => $reservation->phone,
+                    'email' => $reservation->email,
+                    'price' => $reservation->price,
+                    'ref' => $reservation->ref,
+                    'checkIn' => $reservation->checkIn,
+                    'checkOut' => $reservation->checkOut,
+                    'roomType' => ucfirst($reservation->roomType),
+                    'guests' => $reservation->guests,
+                    'status' => $reservation->status,
+                    'payment' => $reservation->payment,
+                ];
+            // Query settings and contact data
+            $settings = Setting::first();
+            $contact = Contact::first();
+
+            // // Send confirmation email to the guest
+            Mail::send('emails.reservation-paid', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
+                $message->from($contact->email, $settings->name);
+                $message->to($reservation->email, $reservation->fullName);
+                $message->subject('Reservation Payment Successful - ' . $settings->name);
+            });
 
             return redirect()->route('reservation.success')->with('success', 'Payment successful!');
         }
@@ -111,52 +104,6 @@ class PaymentController extends Controller
         $reservation = session('reservation_id');
         return view('reservation-successful', compact('reservation', 'title', 'contact', 'setting'));
     }
-    // public function pay($id)
-    // {
-    //     $setting = Setting::first(); // Assuming you have settings with hotel details
-    //     $contact = Contact::first();
-    //     $title = "Payment";
-    //     $reservationId = session('reservation_id');
-    //     $reservation = Reservation::where('id', $reservationId)->first();
-    //     $paystackPublicKey = env('PAYSTACK_PUBLIC_KEY');
-
-    //     return view('reservation-pay', compact('reservation', 'title', 'contact', 'setting', 'paystackPublicKey'));
-    // }
-
-    // public function callback(Request $request)
-    // {
-    //     $paymentDetails = Http::withHeaders([
-    //         'Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_KEY')
-    //     ])->get('https://api.paystack.co/transaction/verify/' . $request->reference)->json();
-
-    //     if ($paymentDetails['data']['status'] === 'success') {
-    //         // Update reservation status to paid
-    //         $reservation = Reservation::where('ref', $request->reference)->firstOrFail();
-    //         if ($reservation) {
-    //             $reservation->update(['payment' => 1, 'status' => 'active']);
-    //             session(['reservation' => $reservation]);
-    //         } else {
-    //             return redirect()->back()->with('error', 'Reservation not found!');
-    //         }
-
-    //         return redirect()->route('reservation.success')->with('success', 'Payment successful!');
-    //     }
-
-    //     return redirect()->back()->with('error', 'Payment failed!');
-    // }
-
-
-
-
-
-    // public function success()
-    // {
-    //     $title = "Payment Successfully";
-    //     $contact = Contact::first();
-    //     $setting = Setting::first();
-    //     $reservation = session('reservation');
-    //     return view('reservation-successful', compact('reservation', 'title', 'contact', 'setting'));
-    // }
 
     public function clearSession(Request $request)
     {

@@ -2,11 +2,24 @@
 
 @section('content')
     <div class="p-6">
+
         <!-- Page Header -->
         <header class="mb-8">
             <h1 class="text-3xl font-semibold text-gray-800">Edit Room: {{ $room->title }}</h1>
             <p class="text-gray-500">Update the details of the room below.</p>
         </header>
+        @if ($errors->any())
+            <div class="mb-4">
+                <div class="bg-red-100 text-red-700 px-4 py-2 rounded">
+                    <strong>Whoops!</strong> There were some problems with your input.<br>
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
 
         <!-- Room Edit Form -->
         <form action="{{ route('admin.rooms.update', $room->id) }}" method="POST" enctype="multipart/form-data"
@@ -26,6 +39,23 @@
                         <span>{{ $message }}</span>
                     </div>
                 @enderror
+            </div>
+
+            <!-- Room Ref -->
+            <div>
+                <label for="refId" class="block text-gray-700 font-semibold">Reference ID</label>
+                <div class="relative">
+                    <i class="fas fa-bed absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="refId" name="refId" value="{{ old('refId',$room->refId) }}"
+                        class="w-full mt-2 p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
+                        placeholder="Del" required>
+                           @error('refId')
+                    <div class="flex items-center mt-1 text-red-500">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <span>{{ $message }}</span>
+                    </div>
+                @enderror
+                </div>
             </div>
             <!-- Room Quantity -->
             <div>

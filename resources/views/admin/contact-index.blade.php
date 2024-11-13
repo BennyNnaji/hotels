@@ -29,19 +29,7 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Name Field -->
-                <div>
-                    <label for="name" class="block font-medium text-gray-700 mb-1">Name</label>
-                    <div class="flex items-center border rounded px-3 py-2 @error('name') border-red-500 @enderror">
-                        <i class="fas fa-hotel text-gray-400 mr-2"></i>
-                        <input type="text" name="name" id="name"
-                            class="w-full border-none focus:border-none outline-none focus:outline-none focus:ring-0"
-                            value="{{ old('name', $contact->name) }}" placeholder="Hotel Name" />
-                    </div>
-                    @error('name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+
 
                 <!-- Phone Field -->
                 <div>
