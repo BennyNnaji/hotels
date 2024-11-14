@@ -40,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Initialize AOS
 AOS.init({
-    offset: 50, // Offset from the original trigger point
-    delay: 200, // Delay in milliseconds
-    duration: 1000, // Duration of animation in milliseconds
-    easing: "ease-in-out",
-    once: false, // Whether animation should happen only once
+    // offset: 50, // Offset from the original trigger point
+    // xdelay: 200, // Delay in milliseconds
+    // duration: 1000, // Duration of animation in milliseconds
+    // easing: "ease-in-out",
+    // once: false, // Whether animation should happen only once
 });
 
 // Initialize Alpine.js
@@ -179,20 +179,32 @@ document.addEventListener("DOMContentLoaded", togglePaymentStatusText);
 const slider = tns({
     container: "#guestReviewSlider",
     items: 1,
-    slideBy: "page",
+    mouseDrag: true,
+    slideBy: 1, // Move one slide at a time
+    swipeAngle: false,
     autoplay: true,
     controls: false,
+    speed: 400,
     nav: true,
     autoplayButtonOutput: false,
+    center: false, // Prevents centering partial slides
+    edgePadding: 20, // Adds padding on the edges to prevent cutting off slides
+    gutter: 0, // Removes extra space between slides
+
     responsive: {
         640: {
-            items: 1,
+            items: 1, // Shows 1 slide at 640px wide
+            edgePadding: 20, // Edge padding for smaller screens
         },
         700: {
-            items: 2,
+            items: 2, // Shows 2 slides at 700px wide
+            edgePadding: 20, // Edge padding for medium screens
         },
         900: {
-            items: 3,
+            items: 3, // Shows 3 slides at 900px wide
+            edgePadding: 20, // Edge padding for larger screens
         },
     },
 });
+
+ 
