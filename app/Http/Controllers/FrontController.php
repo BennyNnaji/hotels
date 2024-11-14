@@ -24,7 +24,10 @@ class FrontController extends Controller
     public function index()
     {
         $title = "Home";
-        $events = Event::latest()->take(3)->get();
+        // Get upcoming events
+        $events = Event::orderBy('date', 'asc')
+        ->where('date', '>=', now())
+        ->paginate(9);
         $setting = Setting::first();
         $about = About::first();
         $rooms = Room::all();

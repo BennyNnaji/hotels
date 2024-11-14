@@ -176,6 +176,8 @@
                 <select id="status" name="status"
                     class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
                     required>
+                      <option value="timed out" {{ old('status', $reservation->status) == 'pending' ? 'selected' : '' }}>
+                    Pending</option>
                     <option value="active" {{ old('status', $reservation->status) == 'active' ? 'selected' : '' }}>Active
                     </option>
                     <option value="canceled" {{ old('status', $reservation->status) == 'canceled' ? 'selected' : '' }}>

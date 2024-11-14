@@ -40,8 +40,9 @@
             <div>
                 <h2 class="text-lg font-semibold text-gray-700">Status</h2>
                 <p
-                    class="px-4 py-2 inline-block rounded-lg text-white 
+                    class="px-3 py-1 inline-block rounded-lg text-white 
                 @if ($reservation->status == 'active') bg-green-500
+                 @elseif($reservation->status == 'pending') bg-yellow-500
                 @elseif($reservation->status == 'canceled') bg-red-500
                 @elseif($reservation->status == 'timed out') bg-gray-500 @endif">
                     {{ ucfirst($reservation->status) }}
