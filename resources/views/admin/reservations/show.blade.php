@@ -35,6 +35,9 @@
                         @endif
                     </strong></p>
             </div>
+            <div>
+                  <p class="text-gray-700"><strong>Created On:</strong> {{ $reservation->created_at->format('l, F j, Y |  g:i A') }}</p>
+            </div>
 
             <!-- Status -->
             <div>

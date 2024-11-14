@@ -46,24 +46,67 @@
                 <label for="refId" class="block text-gray-700 font-semibold">Reference ID</label>
                 <div class="relative">
                     <i class="fas fa-bed absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="refId" name="refId" value="{{ old('refId',$room->refId) }}"
+                    <input type="text" id="refId" name="refId" value="{{ old('refId', $room->refId) }}"
                         class="w-full mt-2 p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
                         placeholder="Del" required>
-                           @error('refId')
+                    @error('refId')
+                        <div class="flex items-center mt-1 text-red-500">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Room Quantity -->
+            <div>
+                <label for="quantity" class="block text-gray-700 font-semibold">How many Rooms</label>
+                <input type="number" id="quantity" name="quantity" value="{{ old('quantity', $room->quantity) }}"
+                    class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
+                    placeholder="e.g., 8" required>
+                @error('quantity')
                     <div class="flex items-center mt-1 text-red-500">
                         <i class="fas fa-exclamation-circle mr-2"></i>
                         <span>{{ $message }}</span>
                     </div>
                 @enderror
-                </div>
             </div>
-            <!-- Room Quantity -->
+
+            <!-- Room Numbers -->
             <div>
-                <label for="quantity" class="block text-gray-700 font-semibold">Room Quantity</label>
-                <input type="number" id="quantity" name="quantity" value="{{ old('quantity', $room->quantity) }}"
+                <label for="room_numbers" class="block text-gray-700 font-semibold">Room Numbers</label>
+                <div id="roomNumbersWrapper" class="space-y-2">
+                    @if ($room->room_numbers)
+                        @foreach (old('room_numbers', $room->room_numbers) as $roomNumber)
+                            <div class="flex items-center space-x-2">
+                                <input type="text" name="room_numbers[]" value="{{ $roomNumber }}"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
+                                    placeholder="e.g., 101" required>
+                                <button type="button" class="removeRoomNumber text-red-500">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <button type="button" id="addRoomNumber" class="text-primary mt-3">
+                    <i class="fas fa-plus"></i> Add More Room Numbers
+                </button>
+                @error('room_numbers')
+                    <div class="flex items-center mt-1 text-red-500">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <span>{{ $message }}</span>
+                    </div>
+                @enderror
+            </div>
+
+            <!-- Max Guests -->
+            <div>
+                <label for="maxGuest" class="block text-gray-700 font-semibold">Max Guests</label>
+                <input type="number" id="maxGuest" name="maxGuest" value="{{ old('maxGuest', $room->maxGuest) }}"
                     class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-primary"
-                    placeholder="e.g., 8" required>
-                @error('quantity')
+                    placeholder="e.g., 4" required>
+                @error('maxGuest')
                     <div class="flex items-center mt-1 text-red-500">
                         <i class="fas fa-exclamation-circle mr-2"></i>
                         <span>{{ $message }}</span>
@@ -102,7 +145,7 @@
                     @endphp
                     @foreach ($amenitiesList as $amenity)
                         <label class="flex items-center space-x-2">
-                            <input type="checkbox" name="amenities[]" value="{{ $amenity }}"
+                            <input type="checkbox" name="amenities[]" value="{{ $amenity }} "
                                 class="rounded text-primary"
                                 {{ in_array($amenity, old('amenities', $room->amenities)) ? 'checked' : '' }}>
                             <span>{{ $amenity }}</span>
@@ -152,24 +195,71 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
                     @if (!empty($room->photos))
                         @foreach ($room->photos as $photo)
-                            <div class="h-32">
-                                <img src="{{ Storage::url($photo) }}" alt="Room Photo"
-                                    class="w-full h-full object-cover rounded-lg shadow-sm">
+                            <div class="relative">
+                                <img src="{{ asset('storage/' . $photo) }}" alt="Room Photo"
+                                    class="w-full h-32 object-cover rounded-lg">
+                                <button type="button"
+                                    class="absolute top-0 right-0 p-1 bg-red-600 text-white rounded-full text-xs">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                         @endforeach
                     @else
-                        <p class="text-gray-600">No existing photos.</p>
+                        <p class="text-gray-500">No photos uploaded yet.</p>
                     @endif
                 </div>
             </div>
 
             <!-- Submit Button -->
-            <div>
+            <div class="flex justify-end">
                 <button type="submit"
-                    class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-dark transition">
+                    class="px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow hover:bg-primary-dark">
                     Update Room
                 </button>
             </div>
         </form>
     </div>
+
+    <!-- JavaScript for Dynamic Room Numbers -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roomNumbersWrapper = document.getElementById('roomNumbersWrapper');
+            const addRoomNumberButton = document.getElementById('addRoomNumber');
+            const removeRoomNumberButtons = document.querySelectorAll('.removeRoomNumber');
+
+            // Function to add room number input fields dynamically
+            addRoomNumberButton.addEventListener('click', function() {
+                const roomNumberDiv = document.createElement('div');
+                roomNumberDiv.classList.add('flex', 'items-center', 'space-x-2');
+
+                const roomNumberInput = document.createElement('input');
+                roomNumberInput.type = 'text';
+                roomNumberInput.name = 'room_numbers[]';
+                roomNumberInput.classList.add('w-full', 'p-3', 'border', 'border-gray-300', 'rounded-lg',
+                    'focus:outline-none', 'focus:ring', 'focus:border-primary');
+                roomNumberInput.placeholder = 'e.g., 102';
+                roomNumberDiv.appendChild(roomNumberInput);
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.classList.add('removeRoomNumber', 'text-red-500');
+                removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                roomNumberDiv.appendChild(removeButton);
+
+                roomNumbersWrapper.appendChild(roomNumberDiv);
+
+                // Reattach remove button functionality
+                removeButton.addEventListener('click', function() {
+                    roomNumberDiv.remove();
+                });
+            });
+
+            // Attach remove functionality to existing buttons
+            removeRoomNumberButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    button.closest('div').remove();
+                });
+            });
+        });
+    </script>
 @endsection

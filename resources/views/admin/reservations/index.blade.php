@@ -43,12 +43,12 @@
                             <td class="py-2">{{ $reservation->roomType }}</td>
                             <td class="py-2">
                                 @if ($reservation->payment == 1)
-                              <span class=" text-green-500">Paid</span>
+                                    <span class=" text-green-500">Paid</span>
                                 @else
-                                <span class=" text-red-500">No Paid</span>
+                                    <span class=" text-red-500">No Paid</span>
                                 @endif
                             </td>
-                            <td class="py-2">{{ number_format($reservation->price, 2)}}</td>
+                            <td class="py-2">{{ number_format($reservation->price, 2) }}</td>
                             <td class="py-2">{{ \Carbon\Carbon::parse($reservation->checkIn)->format('M j, y') }}</td>
                             <td class="py-2">{{ \Carbon\Carbon::parse($reservation->checkOut)->format('M j, y') }}</td>
                             <td class="py-2">
@@ -56,6 +56,8 @@
                                     class="px-2 py-1 rounded-lg 
                                @if ($reservation->status == 'active') bg-green-100 text-green-800
                                @elseif($reservation->status == 'canceled') bg-red-100 text-red-800
+                                        @elseif($reservation->status == 'pending') bg-gray-100 text-gray-500
+                                                 @elseif($reservation->status == 'completed') bg-black text-white
                                @elseif($reservation->status == 'timed out') bg-yellow-100 text-yellow-800 @endif">
                                     {{ ucfirst($reservation->status) }}
                                 </span>

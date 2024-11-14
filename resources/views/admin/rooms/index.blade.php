@@ -27,6 +27,9 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ref ID
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">QTY</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rm #</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max
+                            Guests</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₦)
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amenities
@@ -42,7 +45,19 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $room->title }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $room->refId }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $room->quantity }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if ($room->room_numbers)
+                                    @foreach ($room->room_numbers as $room_number)
+                                        <span
+                                            class=" bg-gray-200 rounded-full px-2 m-2 py-1 text-xs font-semibold text-gray-700 block">
+                                            {{ $room_number }}</span>
+                                    @endforeach
+                                @else
+                                <span class="text-gray-500">N/A</span>
+                                @endif
 
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $room->maxGuest }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">₦{{ number_format($room->price, 2) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @foreach ($room->amenities as $amenity)

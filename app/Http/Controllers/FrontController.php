@@ -26,8 +26,8 @@ class FrontController extends Controller
         $title = "Home";
         // Get upcoming events
         $events = Event::orderBy('date', 'asc')
-        ->where('date', '>=', now())
-        ->paginate(9);
+            ->where('date', '>=', now())
+            ->paginate(9);
         $setting = Setting::first();
         $about = About::first();
         $rooms = Room::all();
@@ -192,7 +192,7 @@ class FrontController extends Controller
     public function featuresDetails($id)
     {
         $feature = Feature::find($id);
-        $title = "Features Details";
+        $title = $feature->title;
         $contact = Contact::first();
         $setting = Setting::first();
         return view('feature-details', compact('title', 'feature', 'contact', 'setting'));

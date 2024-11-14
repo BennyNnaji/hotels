@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->string('title'); // Room title
-            $table->string('refId'); // Room title
+            $table->string('refId'); // Room refId
             $table->unsignedTinyInteger('quantity'); // How many of such room
             $table->text('description'); // Room description
             $table->decimal('price', 10, 2); // Room price
+            $table->string('maxGuest'); // Room max number of guest
+            $table->json('room_numbers')->nullable();
             $table->json('photos'); // JSON to store photo paths
             $table->json('amenities')->nullable(); // JSON to store amenities
             $table->timestamps();

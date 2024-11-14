@@ -42,39 +42,3 @@
 
     </section>
 @endsection
-{{-- @extends('layout/content')
-@section('content')
-    <section class="bg-gray-100 font-sans min-h-screen flex items-center justify-center">
-        <div class="text-center">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Complete Your Reservation Payment</h2>
-            <p class="text-lg text-gray-600 mb-8">Reservation for {{ $reservation->roomType }} (Ref:
-                {{ $data['reference'] }})</p>
-
-            <button id="paystackButton" class="bg-blue-500 text-white py-3 px-6 rounded hover:bg-blue-600">
-                Pay ₦{{ number_format($reservation->price, 2) }}
-            </button>
-        </div>
-    </section>
-
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script>
-        document.getElementById('paystackButton').onclick = function() {
-            var handler = PaystackPop.setup({
-                key: '{{ env('PAYSTACK_PUBLIC_KEY') }}',
-                email: '{{ $data['email'] }}',
-                amount: {{ $data['amount'] }},
-                currency: 'NGN',
-                ref: '{{ $data['reference'] }}',
-                callback: function(response) {
-                    // Redirect to callback route with reference as query parameter
-                    window.location.href = "{{ route('reservation.callback') }}?reference=" + response
-                        .reference;
-                },
-                onClose: function() {
-                    alert('Payment window closed.');
-                }
-            });
-            handler.openIframe();
-        };
-    </script>
-@endsection --}}

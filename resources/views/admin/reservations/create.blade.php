@@ -171,27 +171,19 @@
                 </div>
 
                 <!-- Agreement and Consent -->
-                <div class="mt-6">
+                <div class="mt-6 hidden">
                     <h3 class="text-lg font-semibold mb-2">Agreement and Consent</h3>
                     <div class="mb-4">
                         <div class="flex items-center">
                             <input type="checkbox" checked id="terms" name="terms"
-                                {{ old('terms') ? 'checked' : '' }}
                                 class="text-primary form-checkbox h-5 w-5 focus:ring focus:ring-indigo-400">
                             <label for="terms" class="ml-2 text-gray-700">I agree to the <a href="#"
                                     class="text-indigo-600 underline">Terms & Conditions</a></label>
                         </div>
-                        @error('terms')
-                            <div class="text-red-500 text-xs mt-1 flex items-center">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
                     </div>
 
                     <div class="flex items-center">
-                        <input type="checkbox" checked id="marketing" name="marketing"
-                            {{ old('marketing') ? 'checked' : '' }}
+                        <input type="checkbox" checked id="marketing" name="marketing" value="1"
                             class="text-primary form-checkbox h-5 w-5 focus:ring focus:ring-indigo-400">
                         <label for="marketing" class="ml-2 text-gray-700">I want to receive promotional emails and
                             updates</label>
@@ -226,7 +218,7 @@
         // Initially set check-out date minimum to today if no check-in date
         checkOut.setAttribute("min", today);
 
-        
+
         // DYnamic price update
         function updatePrice() {
             const roomSelect = document.getElementById("roomType");

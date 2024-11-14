@@ -34,7 +34,9 @@ class RoomController extends Controller
             'quantity' => 'required|numeric',
             'photos' => 'required|array',
             'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'amenities' => 'nullable|array'
+            'amenities' => 'nullable|array',
+            'maxGuest' => 'required|numeric', // Validate maxGuest
+            'room_numbers' => 'nullable|array', // Validate room_numbers
         ]);
 
         // Handle photo upload
@@ -55,11 +57,13 @@ class RoomController extends Controller
             'price' => $request->input('price'),
             'photos' => $photoPaths, // Assuming $photoPaths is an array
             'amenities' => $request->input('amenities', []), // This will automatically be cast to JSON
+            'maxGuest' => $request->input('maxGuest'), // Add maxGuest value
+            'room_numbers' => $request->input('room_numbers', []), // Add room_numbers as an array
         ]);
-
 
         return redirect()->route('admin.rooms.index')->with('success', 'Room added successfully.');
     }
+
     // Display the specified room
     public function show($id)
     {
@@ -88,7 +92,9 @@ class RoomController extends Controller
             'price' => 'required|numeric',
             'photos' => 'nullable|array',
             'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'amenities' => 'nullable|array'
+            'amenities' => 'nullable|array',
+            'maxGuest' => 'required|numeric', // Validate maxGuest
+            'room_numbers' => 'nullable|array', // Validate room_numbers
         ]);
 
         // Update photo if new ones are uploaded
@@ -104,7 +110,7 @@ class RoomController extends Controller
                 $path = $photo->store('rooms', 'public');
                 $photoPaths[] = $path;
             }
-            $room->photos = ($photoPaths);
+            $room->photos = $photoPaths;
         }
 
         // Update other details
@@ -114,11 +120,14 @@ class RoomController extends Controller
             'quantity' => $request->input('quantity'),
             'description' => $request->input('description'),
             'price' => $request->input('price'),
-            'amenities' => ($request->input('amenities', []))
+            'amenities' => $request->input('amenities', []),
+            'maxGuest' => $request->input('maxGuest'), // Update maxGuest
+            'room_numbers' => $request->input('room_numbers', []), // Update room_numbers
         ]);
 
         return redirect()->route('admin.rooms.index')->with('success', 'Room updated successfully.');
     }
+
 
     // Remove the specified room from storage
     public function destroy(Room $room)

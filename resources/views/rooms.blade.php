@@ -50,6 +50,7 @@
 
                             <p class="text-gray-600">Amenities: <span
                                     class="font-semibold">{{ implode(', ', $room->amenities ?? []) }}</span></p>
+                                    <p class="text-gray-600">Max. Guests: {{ $room->maxGuest }} </p>
                             <p class="text-gray-600">{{ $room->description }}</p>
                             <div class="mt-4">
                                 <span class="text-xl font-bold text-gray-800">₦{{ number_format($room->price, 2) }}</span>

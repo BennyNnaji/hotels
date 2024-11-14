@@ -14,7 +14,10 @@ class Room extends Model
         'price',
         'photos',
         'amenities',
-        'refId'
+        'refId',
+        'room_numbers',
+        'maxGuest'
+
     ];
 
     // Optionally, if you're using the JSON columns for amenities and photos,
@@ -22,6 +25,7 @@ class Room extends Model
     protected $casts = [
         'amenities' => 'array',
         'photos' => 'array', // Add this line to cast photos to an array
+        'room_numbers' => 'array', // Add this line to cast room_numbers to an array
     ];
     
 }
