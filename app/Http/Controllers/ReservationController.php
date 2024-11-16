@@ -149,7 +149,7 @@ class ReservationController extends Controller
             'guests' => 'required|integer|min:1',
             'payment' => 'nullable|boolean',
         ]);
-
+        // dd($validatedData);
         // Check if roomType has changed
         if ($validatedData['roomType'] !== $reservation->roomType) {
             // Retrieve the new refId for the updated roomType
@@ -179,26 +179,33 @@ class ReservationController extends Controller
         ]);
 
         // Query settings and contact data
-        $settings = Setting::first();
-        $contact = Contact::first();
+        // $settings = Setting::first();
+        // $contact = Contact::first();
+        $settings = Setting::first() ?? [];
+        $contact = Contact::first() ?? [];
 
         // Email data to be sent
         $data = [
-            'fullName' => $reservation->fullName,
-            'phone' => $reservation->phone,
-            'email' => $reservation->email,
-            'price' => $reservation->price,
-            'ref' => $reservation->ref,
-            'checkIn' => $reservation->checkIn,
-            'checkOut' => $reservation->checkOut,
-            'roomType' => ucfirst($reservation->roomType),
-            'guests' => $reservation->guests,
-            'status' => $reservation->status,
-            'payment' => $reservation->payment,
+            'fullName' => $reservation->fullName ?? '',
+            'phone' => $reservation->phone ?? '',
+            'email' => $reservation->email ?? '',
+            'price' => $reservation->price ?? 0,
+            'ref' => $reservation->ref ?? '',
+            'checkIn' => $reservation->checkIn ?? '',
+            'checkOut' => $reservation->checkOut ?? '',
+            'roomType' => ucfirst($reservation->roomType) ?? '',
+            'guests' => $reservation->guests ?? 0,
+            'status' => $reservation->status ?? '',
+            'payment' => $reservation->payment ?? '',
         ];
-
+        echo view('emails.reservation-update');
         // Send confirmation email to the guest
-        Mail::send('emails.reservation-update', array_merge($data, compact('settings', 'contact')), function ($message) use ($reservation, $settings, $contact) {
+        Mail::send('emails.reservation-update', array_merge($data, compact('settings', 'contact')),
+        // Mail::send('emails.reservation-update', array_merge($data, [
+        //     'settings' => $settings,
+        //     'contact' => $contact,
+        // ]), 
+        function ($message) use ($reservation, $settings, $contact) {
             $message->from($contact->email, $settings->name);
             $message->to($reservation->email, $reservation->fullName);
             $message->subject('Reservation Update - ' . $settings->name);

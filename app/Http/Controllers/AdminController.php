@@ -6,13 +6,23 @@ use App\Models\Room;
 use App\Models\Event;
 use App\Models\Setting;
 use App\Models\Reservation;
-use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    /**
+     * Display the admin dashboard with various statistics and data.
+     *
+     * This function retrieves and calculates various metrics related to
+     * room bookings, reservations, and guest information. It then passes
+     * these data to the admin dashboard view.
+     *
+     * @return \Illuminate\View\View The rendered admin dashboard view
+     */
     public function dashboard()
     {
         $title = 'Admin Dashboard';
+        $events = Event::all();
+        $setting = Setting::first();
         $reservations = Reservation::all();
         $totalRooms = Room::sum('quantity');
         $bookedRooms = Reservation::where('checkIn', '<=', now())
@@ -35,12 +45,10 @@ class AdminController extends Controller
             ->whereYear('created_at', date('Y'))
             ->where('payment', 1)
             ->count();
-        if ($bookedRooms > 0 && $totalRooms > 0) {
+        $occupancyPercent = 0; // Default value
+        if ($bookedRooms && $totalRooms) {
             $occupancyPercent = ($bookedRooms / $totalRooms) * 100;
         }
-
-        $events = Event::all();
-        $setting = Setting::first();
         return view('admin.dashboard', compact('title', 'newGuestsThisMonth', 'occupancyPercent', 'bookedRooms', 'totalCheckIns', 'totalBooksThisMonth', 'reservations', 'events', 'totalRooms', 'totalReservations', 'totalReservationsThisMonth', 'setting'));
     }
 }

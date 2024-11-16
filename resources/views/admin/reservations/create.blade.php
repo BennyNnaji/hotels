@@ -229,9 +229,9 @@
             const priceInput = document.getElementById("priceInput");
             const maxGuest = document.getElementById("maxGuest");
             const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-            const price = selectedOption.getAttribute("data-price") || 0;
+            const price = parseInt(selectedOption.getAttribute("data-price") || 0);
             const maxGuestValue = selectedOption.getAttribute('data-guest') || 0;
-            document.getElementById("priceDisplay").textContent = `₦${price}`;
+            document.getElementById("priceDisplay").textContent = `₦${price.toLocaleString()}`;
             maxGuest.innerHTML = ` ${maxGuestValue}`;
             priceInput.value = price;
             calculateTotalPrice();
@@ -245,7 +245,7 @@
             if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
                 const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
                 const totalPrice = nights * pricePerNight;
-                document.getElementById("totalPriceDisplay").textContent = `₦${totalPrice}`;
+                document.getElementById("totalPriceDisplay").textContent = `₦${totalPrice.toLocaleString()}`;
                 document.getElementById('totalPrice').value = totalPrice;
             } else {
                 document.getElementById("totalPriceDisplay").textContent = `₦0`;
@@ -255,7 +255,7 @@
         function validateGuests() {
             const maxGuests = document.getElementById("maxGuest").textContent.trim();
             const guestCount = document.getElementById("guests").value;
-            if (guestCount > maxGuests) {
+            if (guestCount > maxGuests || guestCount.length > 1 || (guestCount.length === 1 && guestCount[0] === '0')) {
                 alert(`The maximum allowed guests for this room is ${maxGuests}.`);
                 document.getElementById("guests").value = maxGuests;
             }
@@ -264,4 +264,3 @@
         document.addEventListener("DOMContentLoaded", updatePrice);
     </script>
 @endsection
-
