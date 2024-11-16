@@ -56,8 +56,8 @@
                                     class="px-2 py-1 rounded-lg 
                                @if ($reservation->status == 'active') bg-green-100 text-green-800
                                @elseif($reservation->status == 'canceled') bg-red-100 text-red-800
-                                        @elseif($reservation->status == 'pending') bg-gray-100 text-gray-500
-                                                 @elseif($reservation->status == 'completed') bg-black text-white
+                                @elseif($reservation->status == 'pending') bg-gray-100 text-gray-500
+                                @elseif($reservation->status == 'completed') bg-black text-white
                                @elseif($reservation->status == 'timed out') bg-yellow-100 text-yellow-800 @endif">
                                     {{ ucfirst($reservation->status) }}
                                 </span>

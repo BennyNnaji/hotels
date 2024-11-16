@@ -60,7 +60,8 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="checkIn">Check-in Date</label>
                         <input type="date" id="checkIn" name="checkIn" value="{{ old('checkIn') }}"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            onchange="calculateTotalPrice()">
                         @error('checkIn')
                             <div class="text-red-500 text-xs mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
@@ -68,10 +69,12 @@
                             </div>
                         @enderror
                     </div>
+
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="checkOut">Check-out Date</label>
                         <input type="date" id="checkOut" name="checkOut" value="{{ old('checkOut') }}"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            onchange="calculateTotalPrice()">
                         @error('checkOut')
                             <div class="text-red-500 text-xs mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
@@ -79,6 +82,7 @@
                             </div>
                         @enderror
                     </div>
+
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="roomType">Room Type</label>
                         <select id="roomType" name="roomType"
@@ -87,15 +91,14 @@
                             <option value="">Select...</option>
                             @foreach ($rooms as $room)
                                 <option value="{{ $room->title }}" data-price="{{ $room->price }}"
+                                    data-guest="{{ $room->maxGuest }}"
                                     {{ old('roomType') == $room->title ? 'selected' : '' }}>{{ $room->title }}
                                 </option>
                             @endforeach
                         </select>
-
-                        <!-- Price Display -->
-                        <p>Price: <span id="priceDisplay" class="text-green-400 font-semibold">₦0</span></p>
-                        <input type="hidden" name="price" id="priceInput">
-
+                        <p>Price per Night: <span id="priceDisplay" class="text-green-400 font-semibold">₦0</span></p>
+                        <input type="hidden" id="priceInput">
+                        <p>Maximum Guests: <span id="maxGuest" class="text-red-500 font-semibold"></span></p>
                         @error('roomType')
                             <div class="text-red-500 text-xs mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
@@ -103,11 +106,13 @@
                             </div>
                         @enderror
                     </div>
+
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="guests">Number of Guests</label>
                         <input type="number" id="guests" name="guests" value="{{ old('guests') }}"
                             placeholder="Enter number of guests"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            oninput="validateGuests()">
                         @error('guests')
                             <div class="text-red-500 text-xs mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
@@ -116,7 +121,8 @@
                         @enderror
                     </div>
 
-
+                    <p>Total Price: <span id="totalPriceDisplay" class="text-green-500 font-semibold">₦0</span></p>
+                    <input type="hidden" name="price" id="totalPrice">
                     <div>
                         <label for="payment" class="block text-gray-700 font-semibold">Payment</label>
 
@@ -167,7 +173,6 @@
                             }
                         </style>
                     @endpush
-
                 </div>
 
                 <!-- Agreement and Consent -->
@@ -218,18 +223,45 @@
         // Initially set check-out date minimum to today if no check-in date
         checkOut.setAttribute("min", today);
 
-
-        // DYnamic price update
+        //Dynamic update the price
         function updatePrice() {
             const roomSelect = document.getElementById("roomType");
             const priceInput = document.getElementById("priceInput");
+            const maxGuest = document.getElementById("maxGuest");
             const selectedOption = roomSelect.options[roomSelect.selectedIndex];
             const price = selectedOption.getAttribute("data-price") || 0;
+            const maxGuestValue = selectedOption.getAttribute('data-guest') || 0;
             document.getElementById("priceDisplay").textContent = `₦${price}`;
+            maxGuest.innerHTML = ` ${maxGuestValue}`;
             priceInput.value = price;
+            calculateTotalPrice();
+        }
+        // Calculate total price
+        function calculateTotalPrice() {
+            const checkInDate = new Date(document.getElementById("checkIn").value);
+            const checkOutDate = new Date(document.getElementById("checkOut").value);
+            const pricePerNight = document.getElementById("priceInput").value || 0;
+
+            if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
+                const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+                const totalPrice = nights * pricePerNight;
+                document.getElementById("totalPriceDisplay").textContent = `₦${totalPrice}`;
+                document.getElementById('totalPrice').value = totalPrice;
+            } else {
+                document.getElementById("totalPriceDisplay").textContent = `₦0`;
+            }
+        }
+        // Make sure guests are not more than the room capacity
+        function validateGuests() {
+            const maxGuests = document.getElementById("maxGuest").textContent.trim();
+            const guestCount = document.getElementById("guests").value;
+            if (guestCount > maxGuests) {
+                alert(`The maximum allowed guests for this room is ${maxGuests}.`);
+                document.getElementById("guests").value = maxGuests;
+            }
         }
 
-        // Initialize price display if a room type is preselected
         document.addEventListener("DOMContentLoaded", updatePrice);
     </script>
 @endsection
+

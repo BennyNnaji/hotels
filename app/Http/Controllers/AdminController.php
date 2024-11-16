@@ -35,7 +35,9 @@ class AdminController extends Controller
             ->whereYear('created_at', date('Y'))
             ->where('payment', 1)
             ->count();
-        $occupancyPercent = ($bookedRooms / $totalRooms) * 100;
+        if ($bookedRooms > 0 && $totalRooms > 0) {
+            $occupancyPercent = ($bookedRooms / $totalRooms) * 100;
+        }
 
         $events = Event::all();
         $setting = Setting::first();

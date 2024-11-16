@@ -61,69 +61,7 @@
                     </div>
                 </div>
 
-                <!-- Booking Details -->
-                {{-- <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-2">Booking Details</h3>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="checkIn">Check-in Date</label>
-                        <input type="date" id="checkIn" name="checkIn" value="{{ old('checkIn') }}"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        @error('checkIn')
-                            <div class="text-red-500 text-xs mt-1 flex items-center">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="checkOut">Check-out Date</label>
-                        <input type="date" id="checkOut" name="checkOut" value="{{ old('checkOut') }}"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        @error('checkOut')
-                            <div class="text-red-500 text-xs mt-1 flex items-center">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="roomType">Room Type</label>
-                        <select id="roomType" name="roomType"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            onchange="updatePrice()">
-                            <option value="">Select...</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->title }}" data-price="{{ $room->price }}" data-guest="{{ $room->maxGuest }}"
-                                    {{ old('roomType') == $room->title ? 'selected' : '' }}>{{ $room->title }}
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <!-- Price Display -->
-                        <p>Price: <span id="priceDisplay" class="text-green-400 font-semibold">₦0</span></p>
-                        <input type="hidden" name="price" id="priceInput">
-                        <p > Maximum Guests: <span id="maxGuest" class=" text-red-500 font-semibold"></span></p>
-
-                        @error('roomType')
-                            <div class="text-red-500 text-xs mt-1 flex items-center">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="guests">Number of Guests</label>
-                        <input type="number" id="guests" name="guests" value="{{ old('guests') }}"
-                            placeholder="Enter number of guests"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        @error('guests')
-                            <div class="text-red-500 text-xs mt-1 flex items-center">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div> --}}
+     
                 <!-- Booking Details -->
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold mb-2">Booking Details</h3>
